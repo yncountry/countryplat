@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html id="child-html" lang="en" xmlns:th="http://www.thymeleaf.org" class="login-html">
+<head th:include="util/common_css"></head>
+<style>
+
+</style>
+<body>
+<div class="cl-sidebar" th:include="util/header"></div>
+<div class="cl-sidebar" th:include="util/goodslable"></div>
+<div class="tab-content" align="center">
+    <button style="height: 40px;width: 120px;background: green;color: #ffffff;font-size: 18px;margin-right: 62%">添加供货商
+    </button>
+    <div id="home" style="border: 1px solid green;width: 70%;font-size: 16px;padding: 50px">
+        <form class="form form-horizontal" id="form-article-add">
+            <div class="form-group"><label class="col-sm-2 control-label no-padding-right"><i>*</i>供货人姓名： </label>
+                <div class="col-sm-9">
+                    <input type="text" name="personName" class="col-xs-9 "/>
+                    <input type="hidden" id="from" name="from" th:value="${invoic}"/>
+                    <input type="hidden" id="goodsId" name="goodsId" th:value="${goodsId}"/>
+                </div>
+            </div>
+
+            <div class="form-group"><label class="col-sm-2 control-label no-padding-right"><i>*</i>联系电话： </label>
+                <div class="col-sm-9">
+                    <input type="text" name="phoneNo" class="col-xs-9 "/>
+                </div>
+            </div>
+            <div class="form-group"><label class="col-sm-2 control-label no-padding-right"><i>*</i>微信号： </label>
+                <div class="col-sm-9">
+                    <input type="text" placeholder="微信号" name="wchatNum" class="col-xs-9"/>
+                </div>
+            </div>
+
+            <div class="form-group"><label class="col-sm-2 control-label no-padding-right"><i>*</i>联系地址： </label>
+                <div class="col-sm-9">
+                    <input type="text" placeholder="联系地址" name="address" class="col-xs-9"/>
+                </div>
+            </div>
+
+            <div class="form-group"><label class="col-sm-2 control-label no-padding-right"><i>*</i>QQ 号： </label>
+                <div class="col-sm-9">
+                    <input type="text" placeholder="QQ号" name="qqNum" class="col-xs-9"/>
+                </div>
+            </div>
+
+            <div class="form-group"><label class="col-sm-2 control-label no-padding-right"><i>*</i>供货人性别： </label>
+                <div class="col-sm-9">
+                    <select class="col-sm-9" name="sex">
+                        <option value="1">男</option>
+                        <option value="0">女</option>
+                        <option value="2">未知</option>
+                    </select>
+                </div>
+            </div>
+
+
+            <div th:if="${goodsList!=null and goodsList.size()>0}" class="form-group"><label class="col-sm-2 control-label no-padding-right"><i>*</i>供货商品： </label>
+                <div class="col-sm-9">
+                    <div  th:each="goods:${goodsList}" style="float: left;margin-left: 20px;font-size: 18px" >
+                        <input style="height: 18px;width: 18px"  type="checkbox" name="goodsIds" th:value="${goods.id}"/>
+                        <span th:text="${goods.goodstitle}"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="Button_operation">
+                <button onclick="saveSuppiler()" class="btn btn-primary radius" type="button"><i
+                        class="fa fa-save "></i>&nbsp;保存
+                </button>
+                <button class="btn btn-default radius" type="button">&nbsp;&nbsp;取消&nbsp;&nbsp;</button>
+            </div>
+        </form>
+    </div>
+
+
+</div>
+</body>
+<div th:include="util/common_js"></div>
+<script type="text/javascript" th:inline="javascript">
+    /*<![CDATA[*/
+    function saveSuppiler() {
+        var formData = new FormData($("#form-article-add")[0]);
+        var url = "add";
+        var retData = uploadAjax(formData, url, true);
+        var invoc = $("#from").val();
+        var goodsId = $("#goodsId").val();
+        if (invoc == 'invoic') {
+            requestUrl("/invoicing/add?goodsId=" + goodsId);
+        } else {
+            requestUrl("/supplier/list");
+        }
+
+    }
+    /*]]>*/
+</script>
+
+</html>

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html id="child-html" lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:include="util/common_css"></head>
+<body class="skin-blue sidebar-mini">
+<title>添加角色</title>
+<section class="" id="container">
+    <!-- 正文部分 -->
+    <section id="main-content">
+        <style>
+            .form-horizontal .control-label {
+                text-align: right
+            }
+            .form-group{
+                margin:20px 0
+            }
+            .cl-mcont{
+                background-color:#fff
+            }
+            .block-flat, .block-wizard {
+                margin-bottom: 40px;
+                padding: 20px 20px;
+                background: #FFF;
+                border-radius: 3px;
+                -webkit-border-radius: 3px;
+                border-left: 1px solid #efefef;
+                border-right: 1px solid #efefef;
+                border-bottom: 1px solid #e2e2e2;
+                box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.04);
+            }
+        </style>
+        <script type="text/javascript">
+            /*<![CDATA[*/
+            function chick(value) {
+                if (value == "pt") {
+                    document.getElementById("keyseed").style.display = "none";
+                    document.getElementById("keyseed1").style.display = "none";
+                    $("#iskeyd").val("0");
+                    $("#lph").val("");
+                }
+                if (value == "key") {
+                    document.getElementById("keyseed").style.display = "block";
+                    document.getElementById("keyseed1").style.display = "block";
+                    $("#iskeyd").val("1");
+                }
+            }
+            var myclosedialog;
+            function choosekey_unit() {
+                var mydialog = art.dialog({
+                    title : '选择可用key（双击选择）',
+                    lock : true,
+                    height : 400,
+                    background : '#032D61', // #083931 墨绿 //032D61 淡蓝 //0D3A6F 淡蓝
+                    opacity : 0.7
+                });
+                myclosedialog = mydialog;
+                $.ajax({
+                    url : 'UserServlet?operatortype=keys',
+                    type : 'POST',
+                    dataType : 'html',
+                    success : function(data) {
+                        mydialog.content(data);
+                    },
+                    error : function() {
+                        mydialog.content("网络错误，请联系网络管理员！");
+                    }
+                });
+            };
+            /*]]>*/
+        </script>
+
+        <div class="cl-sidebar" th:include="util/header"></div>
+        <div class="cl-sidebar" th:include="util/syslable"></div>
+        <section class="wrapper">
+            <form id="pageForm" class="form-horizontal">
+                <div class="row">
+                    <input  id="roleid" class="form-control" placeholder="必填" name="id" type="hidden" th:value="${form.id}"/>
+                    <div class="form-group col-md-8">
+                        <label class="col-sm-4 control-label" style="width: 100px;">角色名称：</label>
+                        <div class="col-sm-5">
+                            <input type="text" name="roleName" class="form-control" th:value="${form.roleName}" required="required" data-bv-notempty-message="姓名必须填写"/>
+                        </div>
+                        <div class="col-sm-3">
+                            <strong class="text-danger">*必填</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="block-flat">
+                            <div>
+                                <h3 style="margin:0 0 20px 0;font-size:18px">权限分配:</h3>
+                            </div>
+
+                            <div class="content" id="power">
+                                <div class="power-line" th:each="modPermission:${permissionMap}" style="padding-left:12px">
+                                    <div class="row">
+                                        <label class="check-box margin-left-30" style="font-weight:bold">
+                                            <input  type="checkbox"  th:text="${modPermission.key}" th:id="${modPermission.key}" value=""/>
+                                        </label>
+                                    </div>
+                                    <div class="row margin-left-30" style="width:100%;overflow:hidden;padding-left:40px">
+                                        <label class="check-box-inline margin-left-30">
+                                            <label th:each="permission,cursatate:${modPermission.value}"  class="check-box hg-bold" >
+                                                <div  th:class="${modPermission.key}">
+                                                  <div th:if="${permission.roles.contains(form)}">
+                                                      <input  th:class="${permission.modName}" th:value="${permission.id}"  type="checkbox" checked="checked" name="permissions" th:text="${permission.modName}"/>
+                                                  </div>
+                                                    <div th:if="${permission.roles.contains(form)==false}">
+                                                        <input  th:class="${permission.modName}" th:value="${permission.id}"  type="checkbox" name="permissions" th:text="${permission.modName}"/>
+                                                    </div>
+                                                </div>
+                                            </label>
+                                        </label>
+                                    </div>
+                                    <div class="divider"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <button id="rolsubmit" type="button" class="btn btn-orange">保存</button><br/>
+                    </div>
+
+                </div>
+            </form>
+        </section>
+    </section>
+</section>
+</body>
+</html>
+<div th:include="util/common_js"></div>
+<script type="text/javascript" th:inline="javascript">
+    /*<![CDATA[*/
+
+    $(function () {
+        $("#rolsubmit").click(function () {
+            var bootstrapValidator = $("#pageForm").data('bootstrapValidator');
+//            if(!bootstrapValidator.isValid()){
+//                return
+//            }
+            var returnData = fromSubmit($('#pageForm').serialize(), "add", "POST");
+            handReturnData(returnData);
+        });
+
+        $('#pageForm').bootstrapValidator({
+            message: 'This value is not valid',
+            excluded : [':disabled'],
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+                name: {
+                    validators: {
+                        notEmpty: {
+                            message: '姓名不能为空'
+                        }
+                    }
+                }
+            }
+        });
+    });
+
+    /*]]>*/
+</script>

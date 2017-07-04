@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html id="child-html" lang="en" xmlns:th="http://www.thymeleaf.org" class="login-html">
+<head th:include="util/common_css"></head>
+<div th:include="util/common_js"></div>
+<body >
+<div class="cl-sidebar" th:include="util/header"></div>
+<div class="cl-sidebar" th:include="util/goodslable"></div>
+<div class="margin clearfix" style="width: 100%">
+    <div class="page_right_style" style="width: 100%">
+        <div class="type_title">商品上架</div>
+        <form class="form form-horizontal" id="form-article-add">
+            <div class="clearfix cl">
+                <label class="form-label col-2"><span class="c-red">*</span>展示标题：</label>
+                <div  class="formControls col-10">
+                    <input type="text" class="input-text"   placeholder="商品名称"  name="title"/>
+                    <input type="hidden" id="goodsId" class="input-text" th:value="${form.id}" name="goodsId"/>
+                </div>
+            </div>
+            <div class=" clearfix cl">
+                <label class="form-label col-2">卖点描述：</label>
+                <div class="formControls col-10">
+                    <input type="text" class="input-text" value="" placeholder="卖点描述"  name="saleDesc"/></div>
+            </div>
+            <div class=" clearfix cl">
+
+                <div class="Add_p_s">
+                    <label class="form-label col-2">销售单价：</label>
+                    <div class="formControls col-2">
+                        <input type="text" class="input-text"  value="" placeholder="销售单价"  name="salePrice"/></div>
+                </div>
+                <div class="Add_p_s">
+                    <label class="form-label col-2">计量数量：</label>
+                    <div class="formControls col-2">
+                        <input type="text" class="input-text" placeholder="计量数量"  name="saleNum"/></div>
+                </div>
+                <div class="Add_p_s">
+                    <label class="form-label col-2">计量单位：</label>
+                    <select class="formControls col-2"  name="unitType">
+                            <option  th:each="unitType:${UnitType}" th:text="${unitType.remark}" th:value="${unitType.value}" ></option>
+                    </select >
+
+                </div>
+
+
+            </div>
+
+            <div class=" clearfix cl">
+                <div class="Add_p_s">
+                    <label class="form-label col-2">库存：</label>
+                    <div class="formControls col-2">
+                        <input type="text" class="input-text"  value="" placeholder="库存"  name="strore"/></div>
+                </div>
+                <div class="Add_p_s">
+                    <label class="form-label col-2">代理价格：</label>
+                    <div class="formControls col-2">
+                        <input type="text" class="input-text"  value="" placeholder="代理价格"  name="agentPrice"/></div>
+                </div>
+                <div class="Add_p_s">
+                    <label class="form-label col-2">品牌：</label>
+                    <div class="formControls col-2">
+                        <input type="text" class="input-text" placeholder="品牌"  name="brand"/></div>
+                </div>
+            </div>
+
+            <div class="clearfix cl">
+                <div class="Button_operation">
+                    <button  onclick="goodShelves();" class="btn btn-primary radius" type="button"><i
+                            class="icon-save "></i>保存商品
+                    </button>
+                    <button onClick="layer_close();" class="btn btn-default radius" type="button">
+                        &nbsp;&nbsp;取消&nbsp;&nbsp;</button>
+                </div>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+<script type="text/javascript" th:inline="javascript">
+
+    /*<![CDATA[*/
+
+     function goodShelves() {
+         //获取富文本中内容
+         // 获取编辑器区域完整html代码
+         var formData = $( "#form-article-add" ).serialize();
+         var url="/saleGoods/add";
+//         var goodsId = $("#goodsId").val();
+//         if(goodsId!=''&&goodsId!=null){
+//             url="edit";
+//         }
+           var retData =fromSubmit(formData,url);
+           handReturnDataRels(retData);
+     }
+
+    /*]]>*/
+</script>
+</body>
+
+
+
+</html>

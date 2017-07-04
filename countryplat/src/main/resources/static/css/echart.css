@@ -1,0 +1,55 @@
+.col-md-3{
+    width: 20% !important;
+}
+.spacing-bottom {
+    margin-bottom: 30px;
+}
+.tiles {
+    background-color: #bcbcbc;
+    color: #fff;
+    position: relative;
+}
+.tiles.added-margin {
+    margin-right: -10px;
+}
+.tiles.blue {
+    background-color: #0090d9;
+}
+.tiles .tiles-body {
+    padding: 19px 18px 15px 24px;
+}
+.tiles .tiles-title {
+    font-size: 14px;
+    font-family: 'Microsoft Yahei';
+    letter-spacing: 0.5px;
+    font-weight: 600;
+}
+.tiles .heading {
+    font-size: 25px !important;
+    font-family: 'Open Sans';
+    font-weight: 600;
+    margin: 4px 0px;
+}
+.tiles.green {
+    background-color: #39b2a9;
+}
+.tiles.red {
+    background-color: #f35958;
+}
+.tiles.purple {
+    background-color: #78CD51;
+}
+.tiles.yellow {
+    background-color: #f8a142;
+}
+.tiles-body{
+    overflow: hidden;
+}
+.iconBox{
+    overflow: hidden;
+}
+.iconBox i{
+    font-size: 54px;
+    margin-right: 10px;
+}
+

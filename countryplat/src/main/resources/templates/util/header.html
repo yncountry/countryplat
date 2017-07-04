@@ -1,0 +1,68 @@
+
+<div class="container2">
+    <div id="pf-hd">
+        <div class="pf-logo">
+            <img src="../../static/images/main/main_logo.png" alt="logo"/>
+        </div>
+        <div class="pf-nav-wrap">
+            <div class="pf-nav-ww">
+                <ul class="pf-nav">
+                    <li class="pf-nav-item current" data-menu="main-data">
+                        <a href="/country/index">
+                            <span class="iconfont">&#xe646;</span>
+                            <span class="pf-nav-title">数据中心</span>
+                        </a>
+                    </li>
+                    <li class="pf-nav-item manger" data-menu="org-manage">
+                        <a href="/goods/list">
+                            <span class="iconfont">&#xe60d;</span>
+                            <span class="pf-nav-title">进销中心</span>
+                        </a>
+                    </li>
+                    <li class="pf-nav-item manger" data-menu="supplier-mange">
+                        <a href="/bill/list">
+                            <span class="iconfont">&#xe620;</span>
+                            <span class="pf-nav-title">财务中心</span>
+                        </a>
+                    </li>
+                    <li class="pf-nav-item manger" data-menu="sys-manage">
+                        <a href="/admin/user/list">
+                            <span class="iconfont">&#xe63f;</span>
+                            <span class="pf-nav-title">系统管理</span>
+                        </a>
+                    </li>
+                    <li class="pf-nav-item manger" data-menu="supplier-dev">
+                        <a href="javascript:;">
+                            <span class="iconfont">&#xe625;</span>
+                            <span class="pf-nav-title">供货商管理</span>
+                        </a>
+                    </li>
+
+                    <li class="pf-nav-item manger" data-menu="pur-source">
+                        <a href="javascript:;">
+                            <span class="iconfont">&#xe64b;</span>
+                            <span class="pf-nav-title">销售中心</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <a href="javascript:;" class="pf-nav-prev disabled iconfont">&#xe606;</a>
+            <a href="javascript:;" class="pf-nav-next iconfont">&#xe607;</a>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="../../static/js/jquery-1.7.2.js"></script>
+<script type="text/javascript" th:inline="javascript">
+    $(function () {
+        $(".pf-nav-item").click(function () {
+
+            $("li").removeClass("pf-nav-item current");
+//            $(".pf-nav-item current").addClass("pf-nav-item manger")
+             $(this).removeClass("pf-nav-item manger")
+
+        });
+    })
+
+</script>
+
+

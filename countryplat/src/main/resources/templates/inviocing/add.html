@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html id="child-html" lang="en" xmlns:th="http://www.thymeleaf.org" class="login-html">
+<head th:include="util/common_css"></head>
+<body>
+<div class="cl-sidebar" th:include="util/header"></div>
+<div class="cl-sidebar" th:include="util/goodslable"></div>
+<div class="tab-content" align="center">
+    <button  style="height: 40px;width: 120px;background: green;color: #ffffff;font-size: 18px;margin-right: 62%">添加货源</button>
+    <div id="home" style="border: 1px solid green;width: 70%;font-size: 16px;padding: 50px">
+       <form id="pageForm">
+        <div class="form-group"><label class="col-sm-2 control-label no-padding-right"><i>*</i>商品名称： </label>
+            <div class="col-sm-9">
+                <input type="text" th:value="${goods.goodstitle}"  readonly="readonly" class="col-xs-9 "/>
+                <input type="hidden" th:value="${goods.id}" name="goods.id"/>
+            </div>
+        </div>
+
+        <div class="form-group"><label class="col-sm-2 control-label no-padding-right" ><i>*</i>商品单价： </label>
+            <div class="col-sm-9">
+                <input type="text" readonly="readonly"  th:value="${goods.inPrice}" class="col-xs-9 "/>
+                 元/<span th:text="${goods.unitType.remark}"></span>
+            </div>
+        </div>
+        <div class="form-group"><label class="col-sm-2 control-label no-padding-right"><i>*</i>进货数量： </label>
+            <div class="col-sm-9">
+                <input type="text"  placeholder="进货数量" name="invocNum" class="col-xs-9"/>
+            </div>
+        </div>
+        <div class="form-group"><label class="col-sm-2 control-label no-padding-right" ><i>*</i>支付账户： </label>
+            <div class="col-sm-9">
+                <select class="col-sm-9" name="payState" >
+                    <option value="0">暂欠款</option>
+                    <option value="1">已付款</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group"><label class="col-sm-2 control-label no-padding-right" ><i>*</i>支付账户： </label>
+            <div class="col-sm-9">
+                <select name="baseAccount.id" class="col-sm-9" >
+                    <option  th:each="paytype:${accountType}" th:text="${paytype.accountName}" th:value="${paytype.id}"></option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group"><label class="col-sm-2 control-label no-padding-right" ><i>*</i>供 货 商： </label>
+            <div class="col-sm-9">
+                <select th:if="${goods.suppliers !=null and goods.suppliers.size()!=0}" name="supplier.id" class="col-sm-9" >
+                    <option th:each="supper:${goods.suppliers}" th:value="${supper.id}" th:text="${supper.personName}" >
+
+                    </option>
+                </select>
+                <a style="color: red" th:href="@{/supplier/add(goodsId=${goods.id},from='invoic')}" >添加供货商</a>
+            </div>
+        </div>
+
+        <div class="Button_operation">
+            <button onclick="invocSubmit();" class="btn btn-primary radius" type="button"><i class="fa fa-save "></i>&nbsp;保存</button>
+
+            <button onclick="layer_close();" class="btn btn-default radius" type="button">&nbsp;&nbsp;取消&nbsp;&nbsp;</button>
+
+        </div>
+       </form>
+    </div>
+
+</div>
+</body>
+<div th:include="util/common_js"></div>
+<script type="text/javascript" th:inline="javascript">
+   function invocSubmit() {
+       var url = "/invoicing/add";
+       var data = $("#pageForm").serialize();
+       var retData = fromSubmit(data,url);
+       handReturnData(retData);
+   }
+
+</script>
+
+</html>

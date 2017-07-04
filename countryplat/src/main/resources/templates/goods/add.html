@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html id="child-html" lang="en" xmlns:th="http://www.thymeleaf.org"><head th:include="util/common_css"></head>
+<div th:include="util/common_js"></div>
+<link rel="stylesheet" type="text/css" href="../../static/dist/css/wangEditor.min.css"/>
+<script type="text/javascript" src="../../static/dist/js/wangEditor.min.js"></script>
+
+<body >
+<div class="cl-sidebar" th:include="util/header"></div>
+<div class="cl-sidebar" th:include="util/goodslable"></div>
+<div class="margin clearfix" style="width: 100%">
+    <div class="page_right_style" style="width: 100%">
+        <div class="type_title">添加商品</div>
+        <form class="form form-horizontal" id="form-article-add">
+            <div class="clearfix cl">
+                <label class="form-label col-2"><span class="c-red">*</span>商品名称：</label>
+                <div  class="formControls col-10">
+                    <input type="text" class="input-text" th:value="${form.goodstitle}"  placeholder="商品名称"  name="goodstitle"/>
+                    <input type="hidden" id="goodsId" class="input-text" th:value="${form.id}" name="id"/>
+                    <input type="hidden"  class="input-text" th:value="${form.store}" name="store"/>
+                </div>
+            </div>
+            <div class=" clearfix cl">
+                <label class="form-label col-2">商品描述：</label>
+                <div class="formControls col-10">
+                    <input type="text" class="input-text" value="" placeholder="商品描述" th:value="${form.goodsDesc}" name="goodsDesc"/></div>
+            </div>
+            <div class=" clearfix cl">
+
+                <div class="Add_p_s">
+                    <label class="form-label col-2">产品编号：</label>
+                    <div class="formControls col-2">
+                        <input type="text" readonly="readonly" class="input-text"  value="" placeholder="系统自动生成" th:value="${form.goodsNo}" name="goodsNo"/></div>
+                </div>
+                <div class="Add_p_s">
+                    <label class="form-label col-2">进货单价：</label>
+                    <div class="formControls col-2">
+                        <input type="text" class="input-text" th:value="${form.inPrice}" placeholder="进货价格"  name="inPrice"/></div>
+                </div>
+                <div class="Add_p_s">
+                    <label class="form-label col-2">计量单位：</label>
+                    <select class="formControls col-2"  name="unitType">
+                            <option  th:each="unitType:${UnitType}" th:text="${unitType.remark}" th:value="${unitType.value}" th:selected="${unitType.value+'' == form.unitType+'' }"></option>
+                    </select >
+
+                </div>
+
+
+            </div>
+
+            <div class="clearfix cl">
+                <label class="form-label col-2">商品图片：</label>
+                <div class="col-md-3 text-center" style="margin-left:-15px">
+                    <div  id="showFace" class="person-photo">
+                        <img th:src="@{showGoodsPhoto(goodsId=${form.id},type='main')}" class="center-block"/>
+                    </div>
+                    <span class="photo-title">主图</span>
+                    <input id="fullPhoto" onchange=" imageFace(this)" type="file" name="mainImage_1" multiple="multiple" class="form-control fjsc" style="margin-left:53px"/>
+                </div>
+                <div class="col-md-3">
+                    <div  id="showLeft" class="person-photo">
+                        <img th:src="@{showGoodsPhoto(goodsId=${form.id},type='guige')}" class="center-block"/>
+                    </div>
+                    <span class="photo-title">规格图</span>
+                    <input id="leftPhoto" type="file" name="mainImage_2"  multiple="multiple" class="form-control fjsc" onchange=" imageLeft(this)" style="margin-left:53px" />
+                </div>
+                <div class="col-md-3">
+                    <div id="showRight" class="person-photo">
+                        <img th:src="@{showGoodsPhoto(goodsId=${form.id},type='detial')}" class="center-block"/>
+                    </div>
+                    <span class="photo-title">细节图</span>
+                    <input id="rightPhoto" onchange="imageRight(this)" type="file" name="mainImage_3" multiple="multiple" class="form-control fjsc" style="margin-left:53px"/>
+                </div>
+            </div>
+
+            <div class="clearfix cl" style="width:80%; padding-left: 5%" >
+                <label class="form-label col-2">产品详情：</label>
+                <div id="detial" style="height:400px;max-height:600px;">
+                    <p th:utext="${form.detail}"></p>
+                </div>
+            </div>
+            <input id="goodDetial" type="hidden" name="detail"/>
+            <div class="clearfix cl">
+                <div class="Button_operation">
+                    <button  onclick="goodSave();" class="btn btn-primary radius" type="button"><i
+                            class="icon-save "></i>保存商品
+                    </button>
+                    <button onClick="layer_close();" class="btn btn-default radius" type="button">
+                        &nbsp;&nbsp;取消&nbsp;&nbsp;</button>
+                </div>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+<script type="text/javascript" th:inline="javascript">
+
+    /*<![CDATA[*/
+     var editor = new wangEditor('detial');
+    // 上传图片（举例）
+    editor.config.uploadImgUrl = '/common/uploadImage';
+    // 设置 headers（举例）
+    editor.config.uploadHeaders = {
+        'Accept' : 'text/x-json'
+    };
+    // 隐藏掉插入网络图片功能。该配置，只有在你正确配置了图片上传功能之后才可用。
+     editor.config.hideLinkImg = true;
+     editor.create();
+
+
+
+    function imageLeft(input) {
+        var files = input.files;
+        showImage(files, $("#showLeft"));
+    }
+    function imageRight(input) {
+        var files = input.files;
+        showImage(files, $("#showRight"));
+    }
+    function imageFace(input) {
+        var files = input.files;
+        showImage(files, $("#showFace"));
+    }
+
+
+    function showImage(files,inputshow) {
+        inputshow.empty();
+        var file = files[0];
+        var imageType = /^image\//;
+        if ( !imageType.test(file.type) ) {
+            alert("请选择图片类型上传");
+            return;
+        }
+        var img = document.createElement("img");
+        img.classList.add("obj");
+        img.file = file;
+        img.style.width = "100%";
+        inputshow.append(img);
+        var reader = new FileReader();
+        reader.onload = (function(aImg) {
+            return function(e) {
+                aImg.src = e.target.result;
+            };
+        })(img);
+        reader.readAsDataURL(file);
+    }
+
+     function goodSave() {
+         //获取富文本中内容
+         // 获取编辑器区域完整html代码
+         var html = editor.$txt.html();
+         $("#goodDetial").val(html);
+         var formData = new FormData($( "#form-article-add" )[0]);
+         var url="add";
+         var goodsId = $("#goodsId").val();
+         if(goodsId!=''&&goodsId!=null){
+             url="edit";
+         }
+         var retData =uploadAjax(formData,url,true);
+//         alert(111);
+//         window.location.href="/goods/list";
+         requestUrl("/goods/list")
+
+     }
+
+    /*]]>*/
+</script>
+</body>
+
+
+
+</html>

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html id="child-html" lang="en" xmlns:th="http://www.thymeleaf.org" class="login-html">
+<head th:include="util/common_css"></head>
+<body>
+<div class="cl-sidebar" th:include="util/header"></div>
+<div class="cl-sidebar" th:include="util/goodslable"></div>
+<div class="margin clearfix">
+    <div class="Guestbook_style">
+        <div class="search_style">
+
+            <div class="title_names">搜索查询</div>
+            <form action="/supplier/list">
+            <ul class="search_content clearfix">
+                <li>
+                    供货姓名<input name="" type="text" class="text_add" placeholder="输入姓名" style=" width:250px"/>
+                   手机号码<input name="" type="text" class="text_add" placeholder="输入手机号码" style=" width:250px"/>
+                   微信号<input name="" type="text" class="text_add" placeholder="微信号" style=" width:250px"/>
+                    QQ号<input name="" type="text" class="text_add" placeholder="QQ号" style=" width:250px"/>
+                </li>
+                <li style="width:90px;"><button type="submit" class="btn_search"><i class="icon-search"></i>查询</button></li>
+            </ul>
+            </form>
+        </div>
+        <div class="border clearfix">
+       <span class="l_f">
+        <a href="/supplier/add" class="btn btn-danger"><i class="fa fa-trash"></i>&nbsp;添加供货商</a>
+       </span>
+
+        </div>
+        <!--留言列表-->
+        <div class="Guestbook_list">
+            <table class="table table-striped table-bordered table-hover" id="sample-table">
+                <tr class="table_first_tr">
+                    <td >姓名</td>
+                    <td>手机号</td>
+                    <td>微信号</td>
+                    <td>QQ号</td>
+                    <td>地址</td>
+                    <td>供货</td>
+                    <td>操作</td>
+                </tr>
+                <tr th:if="${page.content!=null and page.content.size()!=0}"  th:each="form:${page.content}">
+                    <td th:text="${form.personName}">1</td>
+                    <td>
+                        <span  th:text="${form.phoneNo}"></span>
+                    </td>
+                    <td>
+                        <span th:text="${form.wchatNum}"></span>
+                    </td>
+                    <td >
+                        <span th:text="${form.qqNum}"></span>
+                    </td>
+                    <td>
+                        <span th:text="${form.address}"></span>
+                    </td>
+                    <td th:if="${form.goodsList!=null and form.goodsList.size()>0}"  th:each="goods:${form.goodsList}">
+                        <span th:text="${goods.goodstitle}"></span>
+                    </td>
+                    <td  th:if="${form.goodsList==null and form.goodsList.size()==0}" >
+                       暂无供货
+                    </td>
+                    <td >
+                      <a>删除</a>
+                      <a>查看</a>
+                    </td>
+                </tr>
+                <tr th:if="${page.content==null or page.content.size()==0}">
+                    <td colspan="7">
+                      暂未数据
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+<div th:include="util/common_js"></div>
+</html>

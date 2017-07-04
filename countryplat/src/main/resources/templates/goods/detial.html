@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html id="child-html" lang="en" xmlns:th="http://www.thymeleaf.org" class="login-html">
+<head th:include="util/common_css"></head>
+<div th:include="util/common_js"></div>
+<link type="text/css"  href="../../static/css/shopping.css" />
+<style>
+
+    .showimgdiv{
+        width: 555px;
+        height: 505px;
+        border: 1px solid #000000;
+    }
+    .showimg{
+        width: 550px;
+        height: 500px;
+
+    }
+    .listimg{
+        width: 130px;
+        height: 160px;
+        margin-left: 50px;
+        border: 1px solid #000000;
+    }
+    .class_ifno{
+        margin-top: 50px;
+        font-size: 18px;
+    }
+    .class_ifno span{
+        margin-left: 20px;
+    }
+    .buutton_div{
+        margin-top: 80px;
+        /*margin-left: 5%;*/
+    }
+    .buutton_div button{
+        float: left;
+        margin-left: 30px;
+        height: 40px;
+        width: 100px;
+        color: #ffffff;
+        background: #008000;
+        font-size: 18px;
+        border-radius: 5px;
+    }
+    .type_title{
+        height: 30px;
+        background: #F6F6F6;
+        margin-bottom: 30px;
+    }
+</style>
+<body>
+<div class="cl-sidebar" th:include="util/header"></div>
+<div class="cl-sidebar" th:include="util/goodslable"></div>
+<div style="background: #FAFAFA" class="div biankuang" align="center">
+    <div class="type_title" >商品详情</div>
+   <input id="detial" type="hidden" th:value="${form.detail}"/>
+    <input id="page" type="hidden" th:value="${page}" />
+   <table border="1px solid #000000" width="100%">
+       <tr>
+           <td width="35%" style="padding-left:10%">
+               <div class="showimgdiv" >
+                   <img  class="showimg" th:src="@{showGoodsPhoto(goodsId=${form.id},type='main')}"/>
+               </div>
+               <div style="margin-top: 20px">
+                   <img style="margin-left: 10px" class="listimg" th:src="@{showGoodsPhoto(goodsId=${form.id},type='main')}"/>
+                   <img class="listimg" th:src="@{showGoodsPhoto(goodsId=${form.id},type='guige')}"/>
+                   <img style="margin-left: 70px" class="listimg" th:src="@{showGoodsPhoto(goodsId=${form.id},type='detial')}"/>
+               </div>
+           </td>
+           <td width="40%">
+               <div style="margin-bottom: 40%;padding-left: 8%">
+                   <p style="font-size: 24px;" th:text="${form.goodstitle}"></p>
+                   <div style="padding: 5px;padding-bottom:30px;border: 1px solid #008000;width: 80%;margin-top: 20px">
+                   <div  class="class_ifno" >
+                       <span>商品描述:</span>
+                       <span th:text="${form.goodsDesc}"></span>
+                   </div>
+                   <div class="class_ifno" >
+                       <span>进货价格:</span>
+                       <span th:text="${form.inPrice}">0.0</span> 元/
+                       <span th:text="${form.unitType.remark}"></span>
+                   </div>
+                   <div  class="class_ifno" >
+                       <span>发布时间:</span>
+                       <span th:text="${form.createTime}"></span>
+                       <input th:value="${form.id}" type="hidden" id="goodsId"/>
+                   </div>
+                   </div>
+                   <div class="buutton_div">
+                       <button onclick="invocing()">商品进货</button>
+                       <button>上架销售</button>
+                       <button onclick="returnList()">返回列表</button>
+                   </div>
+               </div>
+
+           </td>
+       </tr>
+       <tr>
+           <td colspan="2" height="30px"  style="padding-left:10%">
+
+               <div  style="background: #008000;height: 100%;width: 80%;color: #ffffff;font-size: 18px;margin-top: 20px" >
+                  商品详情
+               </div>
+           </td>
+
+       </tr>
+       <tr>
+
+           <td style="padding-left:15%" colspan="2">
+               <br/> <br/> <br/>
+             <div id="detialHtml"></div>
+           </td>
+       </tr>
+       
+   </table>
+</div>
+
+</body>
+<div th:include="util/common_js"></div>
+<script type="text/javascript" th:inline="javascript">
+    /*<![CDATA[*/
+
+    $("#detialHtml").html($("#detial").val());
+
+    //返回列表
+    function returnList(){
+        var page =$("#page").val();
+        requestUrl("/goods/list?index="+page);
+    }
+
+    function invocing() {
+        var goodsId =$("#goodsId").val();
+        requestUrl("/invoicing/add?goodsId="+goodsId);
+    }
+
+    /*]]>*/
+</script>
+
+</html>

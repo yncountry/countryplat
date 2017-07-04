@@ -1,0 +1,67 @@
+<style>
+    .labecaint{
+        height: 45px;
+        padding: 5px;
+        margin-bottom: 10px;
+        border-bottom: 1px solid #000000;
+        background: #F6F6F6;
+    }
+    .lable_buton{
+        float: left;
+        width: 110px;
+        height: 100%;
+        background: #62A8D1;
+        margin-left: 5px;
+        text-align: center;
+        font-size: 18px;
+        color: #ffffff;
+
+    }
+    .lable_buton span{
+        margin-top: 10px;
+    }
+    .active{
+        background: #1da02b;
+    }
+</style>
+
+<div class="labecaint">
+    <button onclick="checkLable(this,1)" class="lable_buton active">商品信息</button>
+    <button onclick="checkLable(this,2)" class="lable_buton">在售商品</button>
+    <button onclick="checkLable(this,3)" class="lable_buton">供货记录</button>
+    <button onclick="checkLable(this,4)" class="lable_buton">供货商管理</button>
+    <button onclick="checkLable(this,5)" class="lable_buton">代理管理</button>
+</div>
+
+<script>
+    /*<![CDATA[*/
+     function checkLable(obj,index) {
+         clearClass();
+         $(obj).addClass("lable_buton active");
+         if(index==1){
+             //首页
+             window.location.href="/goods/list";
+         }
+         if(index==2){
+             //首页
+             window.location.href="/saleGoods/";
+         }
+         //用户管理首页
+         if(index==3){
+             window.location.href="/invoicing/list"
+         }
+         //供货商管理
+         if(index==4){
+             window.location.href="/supplier/list"
+         }
+     }
+     
+     function clearClass() {
+         var o = $(".lable_buton");
+         for(var i=0;i<o.length;i++){
+             $(o[i]).removeClass("lable_buton active");
+             $(o[i]).addClass("lable_buton");
+         }
+     }
+    /*]]>*/
+</script>

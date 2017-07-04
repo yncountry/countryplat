@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>完成分页</title>
+</head>
+
+<body>
+<div class="pull-right">
+    <div class="dataTables_paginate paging_bs_normal">
+        <ul class="pagination paging">
+
+        </ul>
+    </div>
+</div>
+<div class="clearfix"></div>
+</body>
+
+<script th:src="@{/static/js/jquery-1.7.2.js}"></script>
+<script type="text/javascript" th:inline="javascript">
+    /*<![CDATA[*/
+    var total = [[${page.getTotalPages()}]]; //|| $("#pageTotal").val();//总页数
+    //    var total = $("#pageTotal").val();//总页数
+    //    var page = $("#currPage").val();//跳转的页
+    var page = [[${query.index}]];// || $("#currPage").val();//跳转的页
+//    var contentSize = $("tbody").find("tr").size();//每页数据的条数
+    var contentSize = 20;
+    var isCheckbox = false;
+
+    var indexNode="<input type='hidden' id='index' name='index'>";
+    //初始化全选框的状态
+    showCheckAllStat();
+
+    //控制复选框的全选、半选、取消的状态
+    $("tbody").find("[type='checkbox']").click(function(){
+        showCheckAllStat();
+    });
+
+    if($("#isCheckbox").val()!=undefined&&$("#isCheckbox").val()!=''){
+        isCheckbox = true;
+    }
+
+    $("#searchBtn").click(function(){
+        if(isCheckbox){
+            saveCheckedBox()
+        }
+        $("[name='index']").val("0");
+    })
+
+    if(total<=1){
+        $(".paging").hide();
+    }
+    var a = parseInt(page) + 1;
+    var b = a+4;
+
+    $(".paging").append('<li class="prev disabled"><a href="#" onclick="prevPage()"><span class="fa fa-angle-left"></span>上一页</a></li>')
+    $(".paging").append('<li class="prev disabled"><a href="#" onclick="jumpPage(1)"><span class="fa"></span>首页</a></li>')
+    if(total<=5){
+        for(var i=1;i<=total;i++){
+            $(".paging").append("<li><a href='#' onclick='jumpPage(this.text)'>"+i+"</a></li>");
+        }
+    }else{
+        if(a>=3){
+            $(".paging").append("<li><a href='javascript:;' >...</a></li>");
+        }
+
+        if(a<=3){
+            for(var i=1;i<=5;i++){
+                $(".paging").append("<li><a href='#' onclick='jumpPage(this.text)'>"+i+"</a></li>");
+            }
+        }else if(a>= total-3){
+            for(var i=total-3;i<=total;i++){
+                $(".paging").append("<li><a href='#' onclick='jumpPage(this.text)'>"+i+"</a></li>");
+            }
+        }else{
+            for(var i=a-2;i<=a+2;i++ ){
+                $(".paging").append("<li><a href='#' onclick='jumpPage(this.text)'>"+i+"</a></li>");
+            }
+        }
+
+        if(b <= total){
+            $(".paging").append("<li><a href='#'>...</a></li>");
+        }
+    }
+    $(".paging").append('<li class="prev disabled"><a href="#" onclick="jumpPage(total)"><span class="fa"></span>尾页</a></li>')
+    $(".paging").append('<li class="next"><a href="#" onclick="nextPage()">下一页<span class="fa fa-angle-right"></span></a></li>')
+    if(total>5){
+        $(".paging").append('<span style="color: #949090;line-height: 38px;padding-left: 5px">共'+total+'页，到第</span>');
+        $(".paging").append('<input type="text" class="pagings" style="width:50px" value="'+a+'"/>' + '<span style="color: #949090;">页</span>');
+        $(".paging").append('<input style="height: 25px; margin-left: 5px; font-size: 13px;" onclick="jumpPaging()" type="button" value="确定"/>')
+    }
+
+
+    $(".paging").find("li").attr("class","");
+    var $li = $(".paging").find("li")
+    for(var i=0;i<$li.size();i++){
+        if($($li[i]).find("a").text() == a){
+            $($li[i]).attr("class","active");
+        }
+    }
+    //$($(".paging").find("li")[++page]).attr("class","active");
+
+    if(page==0){
+        $(".paging").find("li:first").hide();
+    }else if(page==total-1){
+        $(".paging").find("li:last").hide();
+    }else{
+        $(".paging").find("li:first").show();
+        $(".paging").find("li:last").show();
+    }
+
+    function prevPage(){
+        if(isCheckbox){
+            saveCheckedBox()
+        }
+//        var page = $(".paging").find(".active").text();
+//        $("#currPage").val(page-2);
+//        $("#conditionForm").attr("index",(page-2));
+        $("#conditionForm").append(indexNode);
+        $("#index").val(page- 1);
+        $("#conditionForm").submit();
+    }
+
+    function jumpPage(currPage) {
+        debugger;
+        if(isCheckbox){
+            saveCheckedBox()
+        }
+//        $("#currPage").val(currPage-1);
+//        $("#conditionForm").attr("index",currPage-1);
+        $("#conditionForm").append(indexNode);
+        $("#index").val(currPage - 1);
+        $("#conditionForm").submit();
+    }
+
+    function nextPage(){
+        if(isCheckbox){
+            saveCheckedBox()
+        }
+//        var page = $(".paging").find(".active").text()
+//        $("#currPage").val(page);
+//        $("#conditionForm").attr("index",page);
+        $("#conditionForm").append(indexNode);
+        $("#index").val(page+1);
+        $("#conditionForm").submit();
+    }
+    //保存已勾选的记录的ID
+    function saveCheckedBox(){
+        var checkedBox = $("tbody").find("[type='checkbox']:checked");
+        var id = [];
+        for(var i=0;i<checkedBox.length;i++){
+            id.push($($("tbody").find("[type='checkbox']:checked")[i]).val());
+        }
+        $("[name='checkedIds']").val(id.join(","));
+    }
+
+    //全选、清空功能
+    function checkAll(obj){
+        if($(obj).is(":checked")){
+            $("[type='checkbox']").prop("checked",true);
+        }else{
+            $("[type='checkbox']").prop("checked",false);
+        }
+    }
+
+    //显示全选框的状态（全选、半选、未选择）
+    function showCheckAllStat(){
+        var checkedSize = $("tbody").find("[type='checkbox']:checked").length;
+        if(checkedSize >0){
+            if(checkedSize == contentSize){
+                $("#checkAll").prop("indeterminate", false);
+                $("#checkAll").prop("checked",true);
+            }else{
+                $("#checkAll").prop("indeterminate", true);
+            }
+        }else{
+            if(checkedSize == 0){
+                $("#checkAll").prop("checked",false);
+            }
+            $("#checkAll").prop("indeterminate", false);
+
+        }
+    }
+
+    //跳到某页的功能
+    function jumpPaging(){
+        var role =  /^[1-9]\d*$/;
+        var pagination = parseInt($('.pagings').val());
+        if(role.test(pagination)){
+            if(pagination<0){
+                pagination=0;
+            }
+            if(pagination > total){
+                pagination=total;
+            }
+            jumpPage(pagination);
+        }else{
+            jumpPage(1);
+        }
+    }
+
+    /*]]>*/
+</script>
+</html>
